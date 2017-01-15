@@ -38,9 +38,8 @@ public class Spawner : MonoBehaviour {
 		timer += Time.deltaTime;
 		if (timer > spawn_rate) {
 			timer = 0;
-			Instantiate (target_prefab, newCoord(), transform.position);
+			Instantiate (target_prefab, newCoord(), Quaternion.identity);
 			Debug.Log (transform.forward);
 		}
-		transform.rotation = Quaternion.identity;
 	}
 }
