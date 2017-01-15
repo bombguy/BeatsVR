@@ -10,6 +10,9 @@ public class BeatsVRController : MonoBehaviour {
 
 	Transform contactTarget = null;
 
+	public LineRenderer laser;
+	public float laser_length = 100f;
+
 	// Use this for initialization
 	void Start () {
 		trackedObject = GetComponent<SteamVR_TrackedObject> ();
@@ -37,32 +40,14 @@ public class BeatsVRController : MonoBehaviour {
 		}
 	}
 
-	void checkCollide(bool bHit, RaycastHit hit)
-	{
-		//reset if beam not hitting or hitting new target
-
-		/*if (!bHit || (contactTarget && contactTarget != hit.transform))
-		{
-			if (contactTarget != null)
-				changeColor (contactTarget.transform.gameObject, Color.black);
-			contactTarget = null;
-		}*/
-
-		//check if beam has hit a new target
-		if (bHit)
-		{
-			device.TriggerHapticPulse (3000);
-			DestroyObject (hit.transform.gameObject);
-			//changeColor (hit.transform.gameObject, Color.green);
-			//contactTarget = hit.transform;
-		}
-	}
-
-	void changeColor (GameObject obj, Color color) {
-		obj.GetComponent<Renderer> ().material.color = color;
-	}
-
 	void Update() {
+		//Debug.Log (transform.forward);
+		laser.SetPosition(0, transform.position);
+		laser.SetPosition (1, DetectHit (transform.position, laser_length, transform.forward));
+
+		Vector3 newvector = transform.eulerAngles;
+		newvector.z -= 90;
+
 		Ray raycast = new Ray (transform.position, transform.forward);
 		RaycastHit hitObject;
 		bool rayHit = Physics.Raycast (raycast, out hitObject);
@@ -75,4 +60,15 @@ public class BeatsVRController : MonoBehaviour {
 
 	}
 
+	Vector3 DetectHit(Vector3 startPos, float distance, Vector3 direction) {
+		Ray ray = new Ray (startPos, direction);
+		RaycastHit hit;
+		Vector3 endPos = startPos + (distance * direction);
+		if (Physics.Raycast (ray, out hit, distance)) {
+			endPos = hit.point;
+			return endPos;
+		}
+
+		return endPos;
+	}
 } 
