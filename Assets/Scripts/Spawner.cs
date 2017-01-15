@@ -5,6 +5,7 @@ using UnityEngine;
 public class Spawner : MonoBehaviour {
 
 	public GameObject target_prefab;
+	private ScoreSystem score_system;
 	public double spawn_rate;
 	public float spawn_radius;
 
@@ -14,6 +15,7 @@ public class Spawner : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		player = Camera.main.transform;
+		score_system = GameObject.Find ("ScoreSystem").GetComponent<ScoreSystem> ();
 		timer = 0;	
 	}
 
@@ -39,7 +41,7 @@ public class Spawner : MonoBehaviour {
 		if (timer > spawn_rate) {
 			timer = 0;
 			Instantiate (target_prefab, newCoord(), Quaternion.identity);
-			//Debug.Log (transform.forward);
+			score_system.max_targets++;
 		}
 	}
 }

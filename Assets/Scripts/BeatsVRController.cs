@@ -14,15 +14,22 @@ public class BeatsVRController : MonoBehaviour {
 	public LineRenderer laser;
 	public float laser_length = 100f;
 
+	private bool isActiveGame;
+
 	// Use this for initialization
 	void Start () {
 		trackedObject = GetComponent<SteamVR_TrackedObject> ();
 		device = SteamVR_Controller.Input ((int)trackedObject.index);
-		score_system = GameObject.Find ("ScoreSystem").GetComponent<ScoreSystem>();
+
+		isActiveGame = SceneManager.GetActiveScene ().name.Equals ("main");
+
+		if (isActiveGame)
+			score_system = GameObject.Find ("ScoreSystem").GetComponent<ScoreSystem>();
 
 	}
 
 	void fire (bool line_of_sight, RaycastHit hit) {
+		gameObject.GetComponent<AudioSource> ().Play ();
 		if (line_of_sight) {
 			if (hit.transform.tag == "UI") {
 				SceneManager.LoadSceneAsync("main");
@@ -35,10 +42,9 @@ public class BeatsVRController : MonoBehaviour {
 
 			score_system.CreateText (hit.transform.position, transform.rotation);
 			Destroy (hit.transform.gameObject);
-		} else {
+		} else if (isActiveGame){
 			score_system.combo = 0;
 		}
-		Debug.Log("SCORE " + score_system.score + " COMBO " + score_system.combo);
 	}
 
 	void checkAim(bool line_of_sight, RaycastHit hit) {
@@ -48,10 +54,7 @@ public class BeatsVRController : MonoBehaviour {
 				contactTarget.GetComponent<TargetBehavior> ().isTarget = false;
 			contactTarget = null;
 		}
-		if (line_of_sight) {
-			if (hit.transform.CompareTag ("UI")) {
-				return;
-			}
+		if (line_of_sight && isActiveGame) {
 			hit.transform.GetComponent<TargetBehavior> ().isTarget = true;
 			contactTarget = hit.transform;
 		}
