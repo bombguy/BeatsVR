@@ -16,6 +16,7 @@ public class tapButton : MonoBehaviour {
     private void OnMouseDown()
     {
         //GameObject Tap = (GameObject)Instantiate(this.deathParticles, transform.position, Quaternion.identity);
+
         Destroy(this.gameObject);
         //Destroy(Tap, 1);
     }
