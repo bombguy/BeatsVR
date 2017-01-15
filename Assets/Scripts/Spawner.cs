@@ -18,15 +18,19 @@ public class Spawner : MonoBehaviour {
 	}
 
 	Vector3 newCoord() {
-		float distance, x, y, z;
-		do {
-			x = Random.Range (-spawn_radius, spawn_radius);
-			y = Random.Range (1, spawn_radius);
-			z = Random.Range (-spawn_radius, spawn_radius);
-			distance = Mathf.Sqrt (Mathf.Pow (x, 2) + Mathf.Pow (y, 2) + Mathf.Pow (z, 2));
-		} while (Mathf.Abs (spawn_radius - distance) < 1);
-		//Debug.Log (x + " " + y + " " + z + " " + distance);
-		return new Vector3 (x, y, z) + player.position;
+		float x, y, z;
+		float side = Random.Range(-1f, 1f);
+		if (side >= 0) {
+			x = Random.Range(-1f, 0);
+			z = Random.Range(-1f, 0);
+			y = Random.Range(0, 1f);
+		}
+		else {
+			x = Random.Range(0, 1f);
+			z = Random.Range(-1f, 0);
+			y = Random.Range(0, 1f);
+		}
+		return new Vector3 (x * spawn_radius, y * spawn_radius, z * spawn_radius) + player.position;
 	}
 
 	// Update is called once per frame
@@ -34,7 +38,9 @@ public class Spawner : MonoBehaviour {
 		timer += Time.deltaTime;
 		if (timer > spawn_rate) {
 			timer = 0;
-			Instantiate (target_prefab, newCoord(), Quaternion.identity);
+			Instantiate (target_prefab, newCoord(), transform.position);
+			Debug.Log (transform.forward);
 		}
+		transform.rotation = Quaternion.identity;
 	}
 }

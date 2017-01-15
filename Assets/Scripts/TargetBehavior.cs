@@ -8,7 +8,8 @@ public class TargetBehavior : MonoBehaviour {
 	public float lifespan;
 
 	private float timer;
-
+	public Color default_color;
+	public Color highlight_color;
 
 	void Start() {
 		isTarget = false;
@@ -16,9 +17,9 @@ public class TargetBehavior : MonoBehaviour {
 	
 	void Update () {
 		if (isTarget) {
-			this.gameObject.transform.GetComponent<Renderer> ().material.color = Color.green;
+			this.gameObject.transform.GetComponent<Renderer> ().material.color = highlight_color;
 		} else {
-			this.gameObject.transform.GetComponent<Renderer> ().material.color = Color.cyan;
+			this.gameObject.transform.GetComponent<Renderer> ().material.color = default_color;
 		}
 		timer += Time.deltaTime;
 

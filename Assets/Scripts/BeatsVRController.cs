@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class BeatsVRController : MonoBehaviour {
 
-
+	private ScoreSystem score_system;
 	private SteamVR_TrackedObject trackedObject;
 	private SteamVR_Controller.Device device;
 
@@ -17,12 +17,14 @@ public class BeatsVRController : MonoBehaviour {
 	void Start () {
 		trackedObject = GetComponent<SteamVR_TrackedObject> ();
 		device = SteamVR_Controller.Input ((int)trackedObject.index);
+		score_system = GameObject.Find ("ScoreSystem").GetComponent<ScoreSystem>();
 	}
 
 	void fire (bool line_of_sight, RaycastHit hit) {
 		if (line_of_sight) {
 			device.TriggerHapticPulse (3000);
 			Debug.Log ("Target HIT");
+			score_system.score++;
 			Destroy (hit.transform.gameObject);
 		}
 	}
