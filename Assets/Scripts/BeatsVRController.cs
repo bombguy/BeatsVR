@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class BeatsVRController : MonoBehaviour {
 
@@ -18,15 +19,26 @@ public class BeatsVRController : MonoBehaviour {
 		trackedObject = GetComponent<SteamVR_TrackedObject> ();
 		device = SteamVR_Controller.Input ((int)trackedObject.index);
 		score_system = GameObject.Find ("ScoreSystem").GetComponent<ScoreSystem>();
+
 	}
 
 	void fire (bool line_of_sight, RaycastHit hit) {
 		if (line_of_sight) {
+			if (hit.transform.tag == "UI") {
+				SceneManager.LoadSceneAsync("main");
+				return;
+			}
+
 			device.TriggerHapticPulse (3000);
-			Debug.Log ("Target HIT");
 			score_system.score++;
+			score_system.combo++;
+
+			score_system.CreateText (hit.transform.position, transform.rotation);
 			Destroy (hit.transform.gameObject);
+		} else {
+			score_system.combo = 0;
 		}
+		Debug.Log("SCORE " + score_system.score + " COMBO " + score_system.combo);
 	}
 
 	void checkAim(bool line_of_sight, RaycastHit hit) {
@@ -37,6 +49,9 @@ public class BeatsVRController : MonoBehaviour {
 			contactTarget = null;
 		}
 		if (line_of_sight) {
+			if (hit.transform.CompareTag ("UI")) {
+				return;
+			}
 			hit.transform.GetComponent<TargetBehavior> ().isTarget = true;
 			contactTarget = hit.transform;
 		}

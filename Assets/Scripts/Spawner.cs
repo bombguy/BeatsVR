@@ -39,7 +39,7 @@ public class Spawner : MonoBehaviour {
 		if (timer > spawn_rate) {
 			timer = 0;
 			Instantiate (target_prefab, newCoord(), Quaternion.identity);
-			Debug.Log (transform.forward);
+			//Debug.Log (transform.forward);
 		}
 	}
 }

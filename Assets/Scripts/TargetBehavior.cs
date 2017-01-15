@@ -16,16 +16,16 @@ public class TargetBehavior : MonoBehaviour {
 	}
 	
 	void Update () {
+		timer += Time.deltaTime;
+
+		if (timer > lifespan) {
+			Destroy (this.gameObject);
+		}
+
 		if (isTarget) {
 			this.gameObject.transform.GetComponent<Renderer> ().material.color = highlight_color;
 		} else {
 			this.gameObject.transform.GetComponent<Renderer> ().material.color = default_color;
-		}
-		timer += Time.deltaTime;
-
-
-		if (timer > lifespan) {
-			Destroy (this.gameObject);
 		}
 	}
 }
